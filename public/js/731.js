@@ -1,0 +1,1 @@
+(self.webpackChunk=self.webpackChunk||[]).push([[731],{9731:(e,n,t)=>{"use strict";t.r(n),t.d(n,{default:()=>s});const l={};const s=(0,t(1900).Z)(l,(function(){var e=this,n=e.$createElement;e._self._c;return e._m(0)}),[function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",[t("h1",[e._v("Admin Dashboard")])])}],!1,null,null,null).exports}}]);
