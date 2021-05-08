@@ -4,10 +4,22 @@ namespace App\Http\Repositories;
 
 use App\Models\Product;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Helpers\FileHelper;
 
 
 class ProductRepository extends Controller
 {
+	public static function get()
+	{
+		return ['categories' => self::getCategories()];
+	}
+
+	public static function getCategories()
+	{
+		return Category::where('active', 1)->get();
+	}
+
 	public static function index()
 	{
 		return Product::where('active', 1)->get();
@@ -17,9 +29,14 @@ class ProductRepository extends Controller
 	{
 		$product = Product::create([
 			'title' => request('title'),
-			'description' => request('description'),
+			'description' => request('desciption'),
 			'value' => request('value'),
 			'discount' => request('discount'),
+			'margin' => request('margin'),
+			'cod_bar' => request('cod_bar'),
+			'quantity' => request('quantity'),
+			'image' => FileHelper::uploadFile(request()->file('image')),
+			'category_id' => request('category_id'),
 			'admin_id' => request('admin_id'),
 		]);
 
@@ -40,9 +57,14 @@ class ProductRepository extends Controller
 	{
 		Product::where('id', $id)->update([
 			'title' => request('title'),
-			'description' => request('description'),
-			'value' => request('value'),
+			'description' => request('desciption'),
+			'value' => 'value',
 			'discount' => request('discount'),
+			'margin' => request('margin'),
+			'cod_bar' => request('cod_bar'),
+			'quantity' => request('quantity'),
+			'image' => null,
+			'category_id' => request('category_id'),
 			'admin_id' => request('admin_id'),
 		]);
 

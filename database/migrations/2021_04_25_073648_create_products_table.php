@@ -16,12 +16,18 @@ class CreateProductsTable extends Migration
 		Schema::create('products', function (Blueprint $table) {
 			$table->id();
 			$table->string('title');
-			$table->text('description');
-			$table->decimal('value', 12, 2);
-			$table->decimal('discount', 12, 2)->nullable();
+			$table->text('description')->nullable();
+			$table->decimal('value', 12, 2)->default(0);
+			$table->integer('discount')->default(0);
+			$table->integer('margin')->default(0);
 			$table->boolean('active')->default(true);
-			$table->integer('views')->nullable();
-			$table->integer('hating')->nullable();
+			$table->integer('views')->nullable()->default(0);
+			$table->integer('hating')->nullable()->default(5);
+			$table->string('cod_bar')->nullable()->unique();
+			$table->integer('quantity')->default(0);
+			$table->string('image')->nullable();
+			$table->unsignedBigInteger('category_id');
+			$table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
 			$table->unsignedBigInteger('admin_id');
 			$table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
 			$table->timestamps();

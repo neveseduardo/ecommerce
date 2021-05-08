@@ -32,6 +32,11 @@ class ProductController extends Controller
 			'title' 		=> ['required'],
 			'description' 	=> ['required'],
 			'value' 		=> ['required'],
+			'discount' 		=> ['required'],
+			'margin' 		=> ['required'],
+			'quantity' 		=> ['required'],
+			'image' 		=> ['sometimes', 'image', 'mimes:jpeg,bmp,png,gif', 'max:2048'],
+			'category_id' 	=> ['required'],
 			'admin_id' 		=> ['required'],
 		]);
 
@@ -71,6 +76,12 @@ class ProductController extends Controller
 			'title' 		=> ['required'],
 			'description' 	=> ['required'],
 			'value' 		=> ['required'],
+			'discount' 		=> ['required'],
+			'margin' 		=> ['required'],
+			'cod_bar' 		=> ['required'],
+			'quantity' 		=> ['required'],
+			'image' 		=> ['sometimes', 'image', 'mimes:jpeg,bmp,png,gif', 'max:2048'],
+			'category_id' 	=> ['required'],
 			'admin_id' 		=> ['required'],
 		]);
 
@@ -84,11 +95,31 @@ class ProductController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param  \App\Models\Product  $product
+	 * @param  Int  $id
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($id)
 	{
 		return response()->json(Helper::response('Registro deletado com sucesso', false, Repo::delete($id)), Response::HTTP_OK);
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  String  $filename
+	 * @return \Illuminate\Http\Response
+	 */
+	public function getFile()
+	{
+		$filename = request('filename');
+		$file = public_path('/products/' . $filename);
+		$ext = end(explode('.', $filename));
+		$headers = ["Content-type: image/{$ext}"];
+
+		if (!is_dir($file) && file_exists($file)) {
+			return response()->download($file, $filename, $headers);
+		}
+
+		return response()->json(Helper::response('Erro ao recuperar imagem', true, null), Response::HTTP_NOT_FOUND);
 	}
 }

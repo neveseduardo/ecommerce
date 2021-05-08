@@ -7,7 +7,7 @@ return [
     'url' => env('APP_ENV', 'production') === 'production' ? env('APP_URL_P', 'https://ecotmp.herokuapp.com') : env('APP_URL', 'http://localhost:8000'),
     'asset_url' => env('ASSET_URL', null),
     'timezone' => 'America/Sao_Paulo',
-    'locale' => 'pt-br',
+    'locale' => 'pt_br',
     'fallback_locale' => 'en',
     'faker_locale' => 'en_US',
     'key' => env('APP_KEY'),
