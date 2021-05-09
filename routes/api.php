@@ -17,6 +17,7 @@ Route::prefix('admin')->namespace('API')->middleware(['auth:admin-api'])->group(
 });
 Route::prefix('products')->namespace('API')->group(function () {
 	Route::middleware(['auth:admin-api'])->group(function () {
+		Route::get('/get', 'ProductController@get');
 		Route::post('/store', 'ProductController@store');
 		Route::post('/update/{id}', 'ProductController@update')->where('id', '[0-9]+');
 		Route::post('/delete/{id}', 'ProductController@destroy')->where('id', '[0-9]+');

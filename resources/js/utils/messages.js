@@ -17,4 +17,5 @@ export default {
     isNumber: 'O campo deve conter um número válido.',
     minChar: (min) => `O campo deve conter no mínimo ${min} caracteres.`,
     maxChar: (min) => `O campo deve conter no máximo ${min} caracteres.`,
+	maxFileSize: max => `O arquivo deve conter no máximo ${max}`
 }

@@ -9,14 +9,14 @@
                 :accept="accepted"
                 :disabled="disabled"
             />
-            <button
-                class="btn btn-primary btn-round btn-block"
-                @click.prevent="openFileDialog"
-                :disabled="disabled"
+            <el-input
+				disabled
+                :placeholder="inputLabel"
+				v-model="filename"
+                class="input-with-select"
             >
-                <i class="fa fa-upload mr-2"></i>
-                Selecionar
-            </button>
+                <el-button @click.prevent="openFileDialog" slot="append" icon="el-icon-search"></el-button>
+            </el-input>
         </div>
 
         <div
@@ -71,6 +71,7 @@ export default {
             description: 'Somente arquivos de até 2MB',
             inputLabel: 'Clique para selecionar um arquivo...',
             fileList: [],
+			filename: ''
         };
     },
     computed: {
@@ -134,6 +135,7 @@ export default {
             return names.length > 20 ? `${names.slice(0, 20)}...` : names;
         },
         openFileDialog() {
+			console.log('cliquei no button')
             if (!this.disabled) {
                 this.$refs.file.click();
             }
@@ -158,7 +160,7 @@ export default {
     },
     mounted() {
         // console.log(this.multiple, 'mandei aqui');
-        // console.log(this.disabled);
+        console.log(this.disabled);
     },
 };
 </script>
@@ -166,13 +168,12 @@ export default {
 <style lang="scss">
 .file-picker {
     .file-picker-input {
-        border-radius: 20px;
         display: flex;
         flex-direction: row;
         margin-bottom: 0.8rem;
         cursor: pointer;
-		overflow: hidden;
-		max-width: 100%;
+        overflow: hidden;
+        max-width: 100%;
 
         input[type='file'] {
             display: none;
@@ -182,8 +183,8 @@ export default {
             display: block;
             align-items: center;
             padding-left: 1rem;
-			overflow-x: hidden;
-			flex: 1
+            overflow-x: hidden;
+            flex: 1;
         }
 
         .btn {
@@ -228,11 +229,11 @@ export default {
 }
 
 .el-form-item.is-error .file-picker .btn {
-	color: #ef8157;
+    color: #ef8157;
     border-color: #ef8157 !important;
-	background-color: rgba(239, 129, 87, 0.3) !important;
+    background-color: rgba(239, 129, 87, 0.3) !important;
 }
 .el-form-item.is-error .file-picker .btn:hover {
-	color: #ef8157 !important;
+    color: #ef8157 !important;
 }
 </style>

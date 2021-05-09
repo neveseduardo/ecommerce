@@ -180,6 +180,25 @@ const functions = {
     currentDate(date) {
         if (this.isEmpty(date) || !this.isDate(date)) return true
         return moment(this.dateBRtoISO(date)).isAfter(moment().format('YYYY-MM-DD'))
+    },
+    maxFileSize(file, max) {
+		console.log('chegay no maxFileSize')
+        file = Array.isArray(file) ? file[0] : file
+        let size = file.size
+        let sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        let maxExt = max.replace(/[^a-zA-Z]+/g, '');
+        let maxValue = parseInt(max.replace(/[^0-9]+/g, ''));
+        let index = parseInt(Math.floor(Math.log(size) / Math.log(1024)));
+        let sizeOfFile = Math.round(size / Math.pow(1024, index), 2);
+        let indexOf = sizes.indexOf(maxExt);
+
+        if (index > indexOf) return false;
+        if (index === indexOf) {
+            if (sizeOfFile > maxValue) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 

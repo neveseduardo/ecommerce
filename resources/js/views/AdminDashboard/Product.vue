@@ -142,16 +142,12 @@ export default {
                 let value = x.value.replace(/[^0-9\.]+/g, '').replace('.', ',');
                 x.value = `R$ ${value}`;
                 x.created = this.$moment(x.created_at).format('DD/MM/YYYY');
-                let discount = x.value
-                    .replace(/[^0-9\.]+/g, '')
-                    .replace('.', ',');
-                x.discount = x.discount === '' ? 'R$ 00,00' : discount;
             });
         },
         async fetchData() {
             NProgress.start();
             this.loading = true;
-            const { adminDashboardGetProducts: getData } = http.adminDashboard;
+            const { getProducts: getData } = http.products;
 
             try {
                 const req = await getData();

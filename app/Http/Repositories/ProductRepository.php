@@ -37,7 +37,7 @@ class ProductRepository extends Controller
 			'quantity' => request('quantity'),
 			'image' => FileHelper::uploadFile(request()->file('image')),
 			'category_id' => request('category_id'),
-			'admin_id' => request('admin_id'),
+			'admin_id' => request()->user()->id,
 		]);
 
 		return self::getById($product->id);
@@ -65,7 +65,6 @@ class ProductRepository extends Controller
 			'quantity' => request('quantity'),
 			'image' => null,
 			'category_id' => request('category_id'),
-			'admin_id' => request('admin_id'),
 		]);
 
 		return self::getById($id);

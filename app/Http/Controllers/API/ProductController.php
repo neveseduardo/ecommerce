@@ -11,6 +11,15 @@ use Validator;
 class ProductController extends Controller
 {
 	/**
+	 * Return data to frontend.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function get()
+	{
+		return response()->json(Helper::response('Dados retornados com sucesso', false, Repo::get()), Response::HTTP_OK);
+	}
+	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return \Illuminate\Http\Response
@@ -30,18 +39,16 @@ class ProductController extends Controller
 	{
 		$validator = Validator::make(request()->all(), [
 			'title' 		=> ['required'],
-			'description' 	=> ['required'],
 			'value' 		=> ['required'],
 			'discount' 		=> ['required'],
 			'margin' 		=> ['required'],
 			'quantity' 		=> ['required'],
 			'image' 		=> ['sometimes', 'image', 'mimes:jpeg,bmp,png,gif', 'max:2048'],
 			'category_id' 	=> ['required'],
-			'admin_id' 		=> ['required'],
 		]);
 
 		if ($validator->fails()) {
-			return response()->json(Helper::response('Dados retornado com sucesso', true, $validator->errors()), Response::HTTP_BAD_REQUEST);
+			return response()->json(Helper::response('Erro ao validar dados', true, $validator->errors()), Response::HTTP_BAD_REQUEST);
 		}
 
 		return response()->json(Helper::response('Registro inserido com sucesso', false, Repo::store()), Response::HTTP_CREATED);
@@ -74,7 +81,6 @@ class ProductController extends Controller
 	{
 		$validator = Validator::make(request()->all(), [
 			'title' 		=> ['required'],
-			'description' 	=> ['required'],
 			'value' 		=> ['required'],
 			'discount' 		=> ['required'],
 			'margin' 		=> ['required'],
@@ -82,7 +88,6 @@ class ProductController extends Controller
 			'quantity' 		=> ['required'],
 			'image' 		=> ['sometimes', 'image', 'mimes:jpeg,bmp,png,gif', 'max:2048'],
 			'category_id' 	=> ['required'],
-			'admin_id' 		=> ['required'],
 		]);
 
 		if ($validator->fails()) {
