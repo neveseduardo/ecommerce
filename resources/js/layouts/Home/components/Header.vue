@@ -154,7 +154,6 @@ export default {
             this.showNavbar = false;
         },
         onSubmit() {
-            console.log('submeteu');
         },
         getCities(query, callback) {
             this.clearCity();

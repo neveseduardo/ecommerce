@@ -33,8 +33,5 @@ export default {
             }
         },
     },
-	mounted(){
-		console.log(this.$adminSidebar)
-	}
 };
 </script>

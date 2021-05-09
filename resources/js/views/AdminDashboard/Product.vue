@@ -105,6 +105,7 @@
 import NavigationPath from 'src/components/NavigationPath';
 import PPagination from 'src/components/Pagination.vue';
 import { computed, data } from 'src/utils/tableProcess';
+import { mapGetters, mapActions } from 'vuex';
 import NProgress from 'nprogress';
 import http from '@/http';
 
@@ -120,27 +121,51 @@ export default {
             propsToSearch: ['title', 'created_at'],
             tableColumns: [
                 { prop: 'title', label: 'Título', minWidth: 250 },
-                { prop: 'value', label: 'R$ Valor', minWidth: 140 },
-                { prop: 'discount', label: 'Desconto', minWidth: 140 },
+                { prop: 'formatedValue', label: 'R$ Valor', minWidth: 140 },
+                { prop: 'quantity', label: 'Quantidade', minWidth: 140 },
                 { prop: 'created', label: 'Criação', minWidth: 130 },
             ],
             tableData: [],
             loading: false,
         };
     },
-    computed: { ...computed },
+    computed: { ...computed, ...mapGetters({ product: 'product/product' }) },
     methods: {
-        confirmDelete(row) {
-            console.log('clicou no confirm delete', row);
+        ...mapActions({ setProduct: 'product/setProduct' }),
+        confirmDelete({ id }) {
+            const options = {
+                title: 'Confirma?',
+                cancelLabel: 'Cancelar',
+                okLabel: 'Remover',
+            };
+            this.$dialogs
+                .confirm('Deseja realmente deletar este arquivo?', options)
+                .then((res) => (res.ok ? this.deleteProduct(id) : false));
+        },
+        async deleteProduct(id) {
+            NProgress.start();
+            this.loading = true;
+            const { deleteProducts } = http.products;
+
+            try {
+                await deleteProducts(id);
+                this.tableData = [];
+                this.fetchData();
+            } catch (error) {
+                console.log(error);
+            }
+
+            NProgress.done();
+            this.loading = false;
         },
         openProduct(row) {
-            console.log('clicou no open product', row);
+            this.setProduct(row);
+            this.redirect('AdminDashboardProductsForm');
         },
         treatDataTable(data) {
             data.map((x) => {
                 this.treatNullFor(x);
-                let value = x.value.replace(/[^0-9\.]+/g, '').replace('.', ',');
-                x.value = `R$ ${value}`;
+                x.formatedValue = this.formatPrice(x.value);
                 x.created = this.$moment(x.created_at).format('DD/MM/YYYY');
             });
         },

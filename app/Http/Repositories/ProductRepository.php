@@ -58,12 +58,12 @@ class ProductRepository extends Controller
 		Product::where('id', $id)->update([
 			'title' => request('title'),
 			'description' => request('desciption'),
-			'value' => 'value',
+			'value' => request('value'),
 			'discount' => request('discount'),
 			'margin' => request('margin'),
 			'cod_bar' => request('cod_bar'),
 			'quantity' => request('quantity'),
-			'image' => null,
+			'image' => FileHelper::uploadFile(request()->file('image')),
 			'category_id' => request('category_id'),
 		]);
 

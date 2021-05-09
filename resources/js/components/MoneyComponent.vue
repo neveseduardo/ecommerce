@@ -13,16 +13,19 @@
 </template>
 
 <script>
+import { Money } from 'v-money';
+
 export default {
     name: 'MoneyComponent',
+    components: { Money },
     props: {
         value: {
             type: [String, Number],
-            default: () => '',
+            default: () => 0,
         },
         maxLength: {
             type: [String, Number],
-            default: () => 10,
+            default: () => 17,
         },
         placeholder: {
             type: [String, Number],
@@ -39,16 +42,24 @@ export default {
     },
     data() {
         return {
-            money: String(this.formatPrice(this.value === '' ? 0 : this.value)),
+            money: String(this.formatPrice(this.value)),
         };
+    },
+    watch: {
+        value: function (val) {
+            this.money = String(this.formatPrice(val));
+        },
+		money: function (val) {
+			this.$emit('input', this.formatOutput(val));
+		}
     },
     methods: {
         formatMoney() {
             this.money = String(this.formatPrice(this.money));
-            this.$emit('input', this.formatOutput(this.money));
+            
         },
         formatOutput(money) {
-            let [n, x] = money.split(','),
+            let [n, x] = String(money).split(','),
                 v;
             n = n.replace(/[^0-9]/g, '');
             return Number([n, x].join('.'));

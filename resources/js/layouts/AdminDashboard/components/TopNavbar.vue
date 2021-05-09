@@ -159,7 +159,6 @@ export default {
             this.$adminSidebar.adminSidebarLinks.map((item) => {
                 if (item?.children) {
                     item.children.map((children) => {
-						console.log(children)
                         adminArr.push({
                             value:
                                 this.capitalize(item.name) +

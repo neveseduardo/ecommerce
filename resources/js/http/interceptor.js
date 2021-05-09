@@ -29,9 +29,6 @@ http.interceptors.request.use(async config => {
             }
         }
     }
-    if (process.env.MIX_APP_ENV === 'local') {
-        console.log(config)
-    }
     return config
 }, error => {
     if (process.env.MIX_APP_ENV === 'local') {
@@ -44,9 +41,10 @@ http.interceptors.response.use(res => {
     if (res.config.method === 'post' && process.env.MIX_APP_ENV === 'local') {
         console.log(res)
     }
+	console.log(res)
     return res.data
 }, error => {
-	console.log('error response: ', error.response)
+	console.log('error response: ', error?.response)
     if (process.env.MIX_APP_ENV === 'local') {
         console.error(error)
     }

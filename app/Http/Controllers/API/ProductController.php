@@ -40,8 +40,6 @@ class ProductController extends Controller
 		$validator = Validator::make(request()->all(), [
 			'title' 		=> ['required'],
 			'value' 		=> ['required'],
-			'discount' 		=> ['required'],
-			'margin' 		=> ['required'],
 			'quantity' 		=> ['required'],
 			'image' 		=> ['sometimes', 'image', 'mimes:jpeg,bmp,png,gif', 'max:2048'],
 			'category_id' 	=> ['required'],
@@ -82,9 +80,6 @@ class ProductController extends Controller
 		$validator = Validator::make(request()->all(), [
 			'title' 		=> ['required'],
 			'value' 		=> ['required'],
-			'discount' 		=> ['required'],
-			'margin' 		=> ['required'],
-			'cod_bar' 		=> ['required'],
 			'quantity' 		=> ['required'],
 			'image' 		=> ['sometimes', 'image', 'mimes:jpeg,bmp,png,gif', 'max:2048'],
 			'category_id' 	=> ['required'],

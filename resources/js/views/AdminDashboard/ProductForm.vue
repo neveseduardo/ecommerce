@@ -34,7 +34,7 @@
 
                 <el-col :span="24" :md="6">
                     <el-form-item label="Valor" prop="value">
-                        <money v-model="form.value" />
+                        <el-input type="number" placeholder="R$" v-model="form.value" step="0.01"/>
                     </el-form-item>
                 </el-col>
 
@@ -141,12 +141,34 @@
             </el-row>
 
             <el-row>
-                <button class="btn btn-primary btn-round float-right">
+                <button
+                    :disabled="loading"
+                    v-if="product === null"
+                    class="btn btn-primary btn-round float-right"
+                >
                     <i
                         class="mr-2 fa"
                         :class="loading ? 'fa-spin fa-spinner' : 'fa-save'"
                     ></i>
                     Salvar
+                </button>
+                <button
+                    :disabled="loading"
+                    v-else
+                    class="btn btn-primary btn-round float-right"
+                >
+                    <i
+                        class="mr-2 fa"
+                        :class="loading ? 'fa-spin fa-spinner' : 'fa-undo'"
+                    ></i>
+                    Atualizar
+                </button>
+                <button
+                    v-if="product === null"
+                    @click.prevent="resetForm"
+                    class="btn btn-default btn-round float-right mr-2"
+                >
+                    Limpar
                 </button>
             </el-row>
         </el-form>
@@ -159,6 +181,8 @@ import FilePicker from '@/components/FilePicker';
 import { makeRule } from 'src/utils/validator';
 import NProgress from 'nprogress';
 import http from 'src/http';
+import messages from 'src/utils/messages'
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'ProductForm',
@@ -169,11 +193,11 @@ export default {
             form: {
                 image: '',
                 title: '',
-                value: 0,
-                quantity: 0,
-                discount: 0,
-                margin: 0,
-                category_id: 1,
+                value: '',
+                quantity: '',
+                discount: '',
+                margin: '',
+                category_id: '',
                 cod_bar: '',
                 description: '',
             },
@@ -183,14 +207,19 @@ export default {
             rules: makeRule({
                 title: ['required'],
                 value: ['required'],
+                quantity: ['required'],
                 discount: ['minValue:0', 'maxValue:100'],
                 margin: ['minValue:0', 'maxValue:100'],
                 category_id: ['required'],
-                image: ['required', 'maxFileSize:2MB'],
+                image: ['maxFileSize:2MB'],
             }),
         };
     },
+    computed: {
+        ...mapGetters({ product: 'product/product' }),
+    },
     methods: {
+        ...mapActions({ setProduct: 'product/setProduct' }),
         treatData() {
             let fd = new FormData();
             Object.entries(this.form).map(([k, v], i) => {
@@ -202,40 +231,83 @@ export default {
             return fd;
         },
         submitForm() {
-            this.$refs.Form.validate(async (valid) => {
+            this.$refs.Form.validate((valid) => {
                 if (valid && !this.loading) {
-                    NProgress.start();
-                    this.loading = true;
-
-                    const data = this.treatData();
-                    const { storeProducts } = http.products;
-
-                    try {
-                        await storeProducts(data);
-                        this.resetForm();
-                        this.$notify({
-                            type: 'success',
-                            title: 'Sucesso',
-                            message: 'Registrado com sucesso',
-                        });
-                    } catch (error) {
-                        console.log(error);
-                    }
-
-                    NProgress.done();
-                    this.loading = false;
+                    return this.product === null
+                        ? this.create()
+                        : this.update();
                 } else {
                     console.log('error submit!!');
                     return false;
                 }
             });
         },
+        async create() {
+            NProgress.start();
+            this.loading = true;
+
+            const data = this.treatData();
+            const { storeProducts } = http.products;
+
+            try {
+                await storeProducts(data);
+                this.resetForm();
+                this.$notify({
+                    type: 'success',
+                    title: 'Sucesso!',
+                    message: messages.create,
+                });
+            } catch (error) {
+                console.log(error);
+            }
+
+            NProgress.done();
+            this.loading = false;
+        },
+        async update() {
+            NProgress.start();
+            this.loading = true;
+
+            const data = this.treatData();
+            const { updateProducts } = http.products;
+            const { id } = this.product;
+
+            try {
+                const req = await updateProducts(id, data);
+                
+                this.$notify({
+                    type: 'success',
+                    title: 'Sucesso!',
+                    message: messages.update,
+                });
+				this.redirect('AdminDashboardProducts');
+            } catch (error) {
+                console.log(error);
+            }
+
+            NProgress.done();
+            this.loading = false;
+        },
         resetForm() {
-            let n = ['value', 'quantity', 'discount', 'margin'];
-            Object.entries(this.form).map(([k, v], i) => {
-                this.form[k] = n.includes(this.form[k]) ? 0 : '';
-            });
-            this.form.category_id = 1;
+            Object.entries(this.form).map(([k, v], i) => (this.form[k] = ''));
+        },
+        upProduct() {
+            const { product: p } = this;
+            if (!this.isEmpty(p)) {
+                let fields = [];
+                Object.entries(this.form).map(([k, v], i) => fields.push(k));
+                Object.entries(p).map(([k, v], i) => {
+                    if (fields.includes(k)) {
+                        this.form[k] = v;
+                    }
+                });
+				console.log(this.form)
+            }
+        },
+        formatOutput(money) {
+            let [n, x] = String(money).split(',');
+            n = n.replace(/[^0-9]/g, '');
+            return [n, x].join('.');
         },
         async fetchData() {
             NProgress.start();
@@ -245,10 +317,9 @@ export default {
 
             try {
                 const req = await getData();
-
                 const { categories } = req.object;
-
                 this.select.categories = categories;
+                this.upProduct();
             } catch (error) {
                 console.log(error);
             }
@@ -259,7 +330,6 @@ export default {
     },
     mounted() {
         this.fetchData();
-        // console.log(this.rules);
     },
 };
 </script>

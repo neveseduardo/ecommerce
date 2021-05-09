@@ -227,8 +227,6 @@ export default {
         submitForm() {
             this.$refs.loginForm.validate(async (valid) => {
                 if (valid) {
-                    return console.log('Deu');
-
                     this.loading = true;
 
                     setTimeout(() => {
@@ -238,7 +236,6 @@ export default {
                     console.log('error submit!!');
                     return false;
                 }
-                return console.log('não deu');
             });
         },
     },

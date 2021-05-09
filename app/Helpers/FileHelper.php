@@ -17,8 +17,8 @@ class FileHelper
 			}
 		}
 		$ext = $ext ? $ext : $file->getClientOriginalExtension();
-		$name = microtime() . '.' . $ext;
-		$file->storeAs('products' . $name, 'public');
+		$name = strtolower(time() . '.' . $ext);
+		$file->storeAs('products', $name, 'public');
 		return $name;
 	}
 }

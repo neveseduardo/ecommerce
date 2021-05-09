@@ -40,8 +40,9 @@ export default {
             return date.splice(0, 10).split('-').reverse().join('/')
         },
         formatPrice(value) {
+            if (value === '') return ''
             value = String(value).replace(/\D/g, '')
-            value = (value / 100).toFixed(2) + ''
+            value = (value / 100).toFixed(2).toString()
             value = value.replace(".", ",")
             value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
             return `R$ ${value.replace('R$ ', '')}`

@@ -146,8 +146,6 @@ export default {
         submitForm() {
             this.$refs.loginForm.validate(async (valid) => {
                 if (valid) {
-                    return console.log('Deu');
-
                     this.loading = true;
 
                     setTimeout(() => {

@@ -135,7 +135,6 @@ export default {
             return names.length > 20 ? `${names.slice(0, 20)}...` : names;
         },
         openFileDialog() {
-			console.log('cliquei no button')
             if (!this.disabled) {
                 this.$refs.file.click();
             }
@@ -159,8 +158,7 @@ export default {
         },
     },
     mounted() {
-        // console.log(this.multiple, 'mandei aqui');
-        console.log(this.disabled);
+        // console.log(this.disabled);
     },
 };
 </script>

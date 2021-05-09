@@ -1,12 +1,12 @@
 @import "modules/_variables";
 @import "modules/_mixins";
 
-@import 'modules/_reset';
-@import 'modules/_tables';
-@import 'modules/_forms';
-@import 'modules/_home';
-@import 'modules/_auth';
-@import 'modules/_navbar';
+@import 'modules/reset';
+@import 'modules/tables';
+@import 'modules/forms';
+@import 'modules/home';
+@import 'modules/auth';
+@import 'modules/navbar';
 
 @import "modules/plugins/plugin-perfect-scrollbar";
 @import "modules/plugins/plugin-nprogress";
@@ -25,6 +25,7 @@
 @import "modules/images";
 @import "modules/tables";
 @import "modules/footers";
+@import "modules/inputs";
 
 // components
 @import "modules/checkboxes-radio";
